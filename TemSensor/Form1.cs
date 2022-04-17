@@ -407,6 +407,7 @@ namespace TemSensor
             }
         }
 
+        //DO NOT DELETE - created backend code that causes failure when deleted. Just leave empty, has no functionality
         private void pictureBox2_Click(object sender, EventArgs e)
         {
         }
