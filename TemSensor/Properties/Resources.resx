@@ -121,6 +121,9 @@
   <data name="IEC5009_Standby_Symbol.svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\IEC5009_Standby_Symbol.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="PauseButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PauseButton.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Red_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Red_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

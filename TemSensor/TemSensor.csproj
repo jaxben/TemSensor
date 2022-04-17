@@ -84,6 +84,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Assets\IEC5009_Standby_Symbol.svg.png" />
+    <Content Include="Assets\PauseState.png" />
+    <None Include="Resources\PauseButton.bmp" />
     <Content Include="TextFile1.txt" />
     <None Include="Assets\Red_icon.png" />
   </ItemGroup>

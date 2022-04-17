@@ -15,7 +15,7 @@ namespace TemSensor
 {
     public partial class Form1 : Form
     {
-        enum PowerStates { None, Off, On}
+        enum PowerStates { None, Off, On, Pause}
 
         private PowerStates _powerState = PowerStates.On;
         private Action _controlLoop = null;
@@ -29,6 +29,7 @@ namespace TemSensor
         private int _index = 0;
         double bodyTemp = 0, mattressTemp = 0;
         bool updateData = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -54,6 +55,7 @@ namespace TemSensor
 
             label_bodyTemp.Visible = false;
             label_mattressTemp.Visible = false;
+
             //lblMainTemp.Text = $@"{_currentTemp}°C";
         }
 
@@ -130,6 +132,7 @@ namespace TemSensor
             lblTarget.Text = $@"{TARGET_TEMP}°C";
 
             pictureBox2.Visible = true;
+            pictureBox3.Visible = true;
 
             _controlLoop = PreheatControl;
 
@@ -158,6 +161,7 @@ namespace TemSensor
             lblTarget.Visible = false;
 
             pictureBox2.Visible = false;
+            pictureBox3.Visible = false;
 
             // stop timer
             tempTimer.Enabled = false;
@@ -178,7 +182,44 @@ namespace TemSensor
             }
 
         }
+        private void PauseStateGo()
+        {
+            tempTimer.Stop();
+            btnStartPreHeat.Visible = false;
+            btnStartPreHeat.Enabled = false;
 
+            lblPreHeatStatus.Visible = false;
+            prgBarPreHeat.Visible = false;
+
+            lblMainTemp.Visible = false;
+            lblTempType.Visible = false;
+
+            label_bodyTemp.Visible = false;
+            label_mattressTemp.Visible = false;
+
+            lblTargetTemp.Visible = false;
+            lblTarget.Visible = false;
+
+            pictureBox2.Visible = false;
+
+            // stop timer
+            tempTimer.Enabled = false;
+            this.BackColor = Color.Black;
+            _powerState = PowerStates.Pause;
+
+            //close serial port
+            try
+            {
+                if (serialPort1.IsOpen)
+                {
+                    serialPort1.Close();
+                }
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+        }
         private void PowerOn()
         {
             btnStartPreHeat.Visible = true;
@@ -190,6 +231,13 @@ namespace TemSensor
         private void lblPreHeatStatus_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void GPIOStates()
+        {
+            //gpio high -  red light off
+            //gpio low - red light on
+            //need to build function to determine high or low state of GPIO - check into this
         }
 
         private void PreheatControl()
@@ -265,11 +313,19 @@ namespace TemSensor
         private void MainControl()
         {
             //Console.log("Main Control test");
+            
+            //this is where we could split into different threads
 
             string dataIn = serialPort1.ReadTo("\n");
             Data_Parsing(dataIn);
             //this.BeginInvoke(new EventHandler(Show_Data));
             Show_Data();
+
+            //if state involving 37 fahrenheit, heaton function
+
+            // else heatoff
+
+            // need to be in control loop to bounce back and forth
 
             serialPort1.DiscardOutBuffer();
             serialPort1.DiscardInBuffer();
@@ -314,6 +370,52 @@ namespace TemSensor
             {
                 updateData = false;
             }
+        }
+
+        private void heatLightOff()
+        {
+            pictureBox2.Visible = false;
+        }
+
+        private void heatLightOn()
+        {
+            pictureBox2.Visible = true;
+        }
+
+        private void heatOff()
+        {
+            //pinMode(A0, OUTPUT); may need to place within initialization values
+            //digitalWrite(A0, LOW);
+            heatLightOff();
+        }
+
+        private void pictureBox3_Click_1(object sender, EventArgs e)
+        {
+            if (_powerState == PowerStates.On)
+            {
+                DialogResult dialogResult = MessageBox.Show("Pause? This will maintain current temp.", "", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //TODO: Turn 
+                    PauseStateGo();
+                }
+            }
+            else
+            {
+                PowerOn();
+            }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void heatOn()
+        {
+            //pinMode(A0, OUTPUT); may need to place within initialization values
+            //digitalWrite(A0, HIGH);
+            heatLightOn();
         }
     }
 }
